@@ -1,0 +1,26 @@
+name: Generate CBOM
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  cbom-scan:
+    runs-on: ubuntu-latest
+    name: CBOM generation
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create CBOM
+        uses: PQCA/cbomkit-action@v2.0.0
+        id: cbom
+
+      - name: Upload CBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CBOM
+          path: ${{ steps.cbom.outputs.pattern }}
+          if-no-files-found: warn
